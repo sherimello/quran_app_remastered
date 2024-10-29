@@ -1,0 +1,1 @@
+# This folder contains all the widgets to be used by any screens or widgets in general.

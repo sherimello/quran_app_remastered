@@ -4,7 +4,9 @@ import 'package:quran_app/data/surah_types.dart';
 import 'package:quran_app/view%20models/sujood_verse_view_model.dart';
 import 'package:quran_app/views/general%20widgets/bottomsheet_UIs.dart';
 import 'package:quran_app/views/home%20widgets/surah_type_text.dart';
+import 'package:sqflite/sqflite.dart';
 
+import '../../controllers/database_controller.dart';
 import '../../view models/surah_name_view_model.dart';
 
 class SurahList extends StatelessWidget {
@@ -14,8 +16,12 @@ class SurahList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DatabaseController databaseController = Get.put(DatabaseController());
     SujoodVerseViewModel sujoodVerseViewModel = Get.put(SujoodVerseViewModel());
+
     SurahNameViewModel surahNameViewModel = Get.put(SurahNameViewModel());
+
+
     SurahTypes surahTypes = SurahTypes();
     var appBarHeight = AppBar().preferredSize.height;
     var size = Get.size;

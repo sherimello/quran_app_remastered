@@ -1,0 +1,1 @@
+# This folder contains all the (MVVM) View Models required for the app.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/controllers/database_controller.dart';
 import 'package:quran_app/view%20models/surah_name_view_model.dart';
 import 'package:quran_app/view%20models/verse_view_model.dart';
 import 'package:quran_app/views/general%20widgets/bottomsheet_UIs.dart';
@@ -21,8 +22,8 @@ class Home extends StatelessWidget {
     BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs());
 
     SettingsController settingsController = Get.put(SettingsController());
-    VerseViewModel verseViewModel = Get.put(VerseViewModel());
-    SurahNameViewModel surahNameViewModel = Get.put(SurahNameViewModel());
+    // VerseViewModel verseViewModel = Get.put(VerseViewModel());
+    // SurahNameViewModel surahNameViewModel = Get.put(SurahNameViewModel());
 
     // surahNameViewModel.fetchData("");
 

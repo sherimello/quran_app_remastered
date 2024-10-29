@@ -1,0 +1,1 @@
+# This folder contains all the (MVVM) Data Models required for the app.

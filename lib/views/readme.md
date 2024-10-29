@@ -1,0 +1,1 @@
+# This folder contains all the (MVVM) Views/UI files required for the app.
