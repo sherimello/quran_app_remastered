@@ -8,8 +8,10 @@ import '../general widgets/bottomsheet_UIs.dart';
 class HomeAppbarMenu extends StatelessWidget {
 
   final BottomsheetUIs bottomsheetUIs;
+  final bool shouldShowSurahInfo;
+  final String surahName, verseNumber;
 
-  const HomeAppbarMenu({super.key, required this.bottomsheetUIs});
+  const HomeAppbarMenu({super.key, required this.bottomsheetUIs, this.shouldShowSurahInfo = false, this.surahName = "", this.verseNumber = ""});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,29 @@ class HomeAppbarMenu extends StatelessWidget {
                   .isPlaying.value
                   ? 1
                   : 0,
-              child: Row(
+              child: shouldShowSurahInfo ?
+              SizedBox(
+                height: appBarHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(surahName,
+                    style: const TextStyle(
+                      fontFamily: "SF-Pro",
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white
+                    ),
+                    ),
+                    Text("total verses: $verseNumber",
+
+                      style: const TextStyle(
+                          fontFamily: "SF-Pro",
+                          color: Colors.white
+                      ),)
+                  ],
+                ),
+              ) :
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

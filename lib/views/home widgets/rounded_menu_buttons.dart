@@ -22,8 +22,8 @@ class RoundedMenuButtons extends StatelessWidget {
                   "sorry!",
                   "feature will be active soon...",
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.white,
-                  colorText: Colors.black,
+                  backgroundColor: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                  colorText: isDarkMode.value ? Colors.black : Colors.white,
                   margin: const EdgeInsets.all(21),
                 )
               : Get.bottomSheet(

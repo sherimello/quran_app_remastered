@@ -10,31 +10,32 @@ import '../controllers/database_controller.dart';
 
 class VerseViewModel extends GetxController {
 
-  final Database database;
+  final int surahNumber;
 
-  VerseViewModel({required this.database});
+  VerseViewModel({required this.surahNumber});
 
-  VerseModel verseModel =
-      VerseModel(arabicVerseInfo: [].obs, englishVerseInfo: [].obs);
+  Rx<VerseModel> verseModel =
+      VerseModel(arabicVerseInfo: [].obs, englishVerseInfo: [].obs).obs;
 
-  fetchData(var dbName) async {
+  fetchData({required surahNumber}) async {
     final Database db = await DatabaseController().database;
 
     // Get all table names from the database
     // var tableNames = await db.rawQuery("SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%'");
-    var tableData = await db.rawQuery("SELECT * FROM verses");
+    var tableData = await db.rawQuery("SELECT * FROM verses WHERE surah_id = $surahNumber");
 
-    var arabicVerses = tableData..where((v) => v["lang_id"] == 1);
-    var englishVerses = tableData..where((v) => v["lang_id"] == 2);
+    var arabicVerses = await db.rawQuery("SELECT * FROM verses WHERE surah_id = $surahNumber AND lang_id = 1");
+    var englishVerses = await db.rawQuery("SELECT * FROM verses WHERE surah_id = $surahNumber AND lang_id = 2");
 
-    verseModel = VerseModel(
+    verseModel.value = VerseModel(
         arabicVerseInfo: arabicVerses.obs, englishVerseInfo: englishVerses.obs);
+    print(verseModel.value.englishVerseInfo[0]["text"]);
   }
 
   @override
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    await fetchData("verses");
+    await fetchData(surahNumber: surahNumber);
   }
 }

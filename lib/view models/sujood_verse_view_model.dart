@@ -28,8 +28,23 @@ class SujoodVerseViewModel extends GetxController {
 
     sujoodVerseModel.value = SujoodVerseModel(surahID: sujoodSurahs.obs, verseID: sujoodVerses.obs);
 
-    print(sujoodVerseModel);
+    print(sujoodVerseModel.value.verseID);
 
+  }
+
+  getSujoodVerses(int surahIndex) {
+
+    List<dynamic> sujoodVerses = [];
+
+    for (int i = 0; i< sujoodVerseModel.value.surahID.length; i ++) {
+      if(sujoodVerseModel.value.surahID[i] == surahIndex) {
+        sujoodVerses.add(sujoodVerseModel.value.verseID[i]);
+      }
+    }
+
+    print(sujoodVerses);
+
+    return sujoodVerses;
   }
 
   @override
