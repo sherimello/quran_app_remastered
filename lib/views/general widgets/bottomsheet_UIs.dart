@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/view%20models/bookmark_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomsheetUIs extends GetxController {
@@ -129,21 +130,29 @@ class BottomsheetUIs extends GetxController {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(padding: const EdgeInsets.only(top: 21),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.info_rounded, color: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),),
-                      Text("  about",
-                      style: TextStyle(
-                        fontFamily: "SF-Pro",
-                        fontWeight: FontWeight.w900,
-                        fontSize: size.width * .055,
-                        color: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e)
-                      ),
-                      )
-                    ],
-                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 21),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.info_rounded,
+                          color: isDarkMode.value
+                              ? Colors.white
+                              : const Color(0xff1d3f5e),
+                        ),
+                        Text(
+                          "  about",
+                          style: TextStyle(
+                              fontFamily: "SF-Pro",
+                              fontWeight: FontWeight.w900,
+                              fontSize: size.width * .055,
+                              color: isDarkMode.value
+                                  ? Colors.white
+                                  : const Color(0xff1d3f5e)),
+                        )
+                      ],
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(21.0),
@@ -151,7 +160,9 @@ class BottomsheetUIs extends GetxController {
                       width: size.width * .25,
                       height: size.width * .25,
                       decoration: BoxDecoration(
-                          color: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                          color: isDarkMode.value
+                              ? Colors.white
+                              : const Color(0xff1d3f5e),
                           borderRadius: BorderRadius.circular(100)),
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -239,5 +250,199 @@ class BottomsheetUIs extends GetxController {
             ),
           ),
         ));
+  }
+
+  Widget addBookMarkWidget(
+      List<dynamic> folderNames, Rx<BookmarkViewModel> bookmarkViewModel,
+      arabicVerse, englishVerse, surah_id, verse_id
+      ) {
+    TextEditingController textEditingController = TextEditingController();
+    RxBool shouldShowDeletionUI = false.obs;
+    RxInt deletionIndex = 0.obs, bookMarkFolderIndex = 0.obs;
+    return Padding(
+      padding: const EdgeInsets.all(21.0),
+      child: Container(
+        width: size.width,
+        decoration: BoxDecoration(
+            color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
+            borderRadius: BorderRadius.circular(31),),
+        child: Column(
+          children: [
+            Obx(() => AnimatedPadding(
+                  duration: const Duration(milliseconds: 555),
+                  curve: Curves.linearToEaseOut,
+                  padding: EdgeInsets.all(shouldShowDeletionUI.value ? 21 : 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      shouldShowDeletionUI.value = false;
+                      deletionIndex.value = 0;
+                    },
+                    child: AnimatedContainer(
+                      width: shouldShowDeletionUI.value ? size.width : 0,
+                      height: shouldShowDeletionUI.value ? size.width * .11 : 0,
+                      duration: const Duration(milliseconds: 555),
+                      curve: Curves.linearToEaseOut,
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(17)),
+                      child: Center(
+                        child: Text(
+                          "cancel",
+                          style: TextStyle(
+                              fontFamily: "SF-Pro",
+                              fontWeight: FontWeight.w900,
+                              fontSize: size.width * .041,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+            Padding(
+              padding: EdgeInsets.fromLTRB(21, 21, 21, 0),
+              child: Row(
+                children: [
+                  Icon(Icons.book,
+                  color: isDarkMode.value ? Colors.white : Colors.black,),
+                  Text(
+                    "  bookmark folder:",
+                    style: TextStyle(
+                        fontFamily: "SF-Pro", fontWeight: FontWeight.w900,
+                      color: isDarkMode.value ? Colors.white : Colors.black,),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(21, 11, 21, 11),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(17),
+                    color: isDarkMode.value ? Colors.white.withOpacity(.31) : const Color(0x311d3f5e)),
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    // Ensures fillColor is applied
+                    fillColor: Colors.transparent,
+                    // Transparent background
+                    border: InputBorder.none,
+                    // No border
+                    hintText: 'folder name',
+                    hintStyle: TextStyle(
+                        color: Colors.grey), // Optional: color of the hint text
+                  ),
+                  style: TextStyle(color: Colors.black), // Text color
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                bookmarkViewModel.value.insertData(textEditingController.text);
+              },
+              child: Container(
+                width: size.width * .55,
+                height: size.width * .11,
+                decoration: BoxDecoration(
+                    color: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                    borderRadius: BorderRadius.circular(100)),
+                child: Center(
+                  child: Text(
+                    "create folder",
+                    style: TextStyle(
+                        fontFamily: "SF-Pro",
+                        fontWeight: FontWeight.w900,
+                        fontSize: size.width * .041,
+                        color: isDarkMode.value ? Colors.black : Colors.white),
+                  ),
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(21, 21, 21, 0),
+              child: Row(
+                children: [
+                  Icon(Icons.book),
+                  Text(
+                    "  all bookmark folders:",
+                    style: TextStyle(
+                        fontFamily: "SF-Pro", fontWeight: FontWeight.w900),
+                  )
+                ],
+              ),
+            ),
+            Obx(() => Expanded(
+                  child: ListView.builder(
+                    itemCount: bookmarkViewModel
+                        .value.bookmarkModel.value.folderName.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 21, vertical: 5.5),
+                        child: Obx(() => GestureDetector(
+                              onLongPress: () {
+                                deletionIndex.value = index;
+                                shouldShowDeletionUI.value = true;
+                                print("long pressed");
+                              },
+                              onTap: () {
+                                if (shouldShowDeletionUI.value) {
+                                  bookmarkViewModel.value.deleteData(
+                                      bookmarkViewModel
+                                              .value
+                                              .bookmarkModel
+                                              .value
+                                              .folderName[deletionIndex.value]
+                                          ["folder_name"]);
+                                  shouldShowDeletionUI.value = false;
+                                  deletionIndex.value = 0;
+                                } else {
+                                  bookMarkFolderIndex.value = index;
+                                  bookmarkViewModel.value.addVerseAsBookmark(bookmarkViewModel
+                                      .value
+                                      .bookmarkModel
+                                      .value
+                                      .folderName[bookMarkFolderIndex.value]
+                                  ["folder_name"], arabicVerse, englishVerse, surah_id, verse_id);
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: AnimatedContainer(
+                                width: size.width,
+                                height: size.width * .11,
+                                duration: const Duration(milliseconds: 555),
+                                curve: Curves.linearToEaseOut,
+                                decoration: BoxDecoration(
+                                    color: deletionIndex.value == index &&
+                                            shouldShowDeletionUI.value
+                                        ? Colors.red
+                                        : isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                                    borderRadius: BorderRadius.circular(17)),
+                                child: Center(
+                                    child: Text(
+                                  deletionIndex.value == index &&
+                                          shouldShowDeletionUI.value
+                                      ? "delete folder"
+                                      : bookmarkViewModel
+                                          .value
+                                          .bookmarkModel
+                                          .value
+                                          .folderName[index]["folder_name"],
+                                  style: TextStyle(
+                                      fontFamily: "SF-Pro",
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: size.width * .041,
+                                      color: isDarkMode.value ? Colors.black : Colors.white),
+                                )),
+                              ),
+                            )),
+                      );
+                    },
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }
