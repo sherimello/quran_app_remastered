@@ -31,18 +31,24 @@ class Home extends StatelessWidget {
     var appBarHeight = AppBar().preferredSize.height;
 
     return Scaffold(
-          body: SafeArea(
-            child: SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Stack(
-                children: [
-                  SurahList(bottomsheetUIs: bottomsheetUIs),
-                  HomeAppbarMenu(
+          body: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: Stack(
+              children: [
+                SurahList(bottomsheetUIs: bottomsheetUIs),
+                Container(
+                  width: size.width,
+                  height: MediaQuery.of(context).padding.top,
+                  color: const Color(0xff1d3f5e),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  child: HomeAppbarMenu(
                     bottomsheetUIs: bottomsheetUIs,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );

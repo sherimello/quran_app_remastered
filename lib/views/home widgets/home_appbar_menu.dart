@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/view%20models/bookmark_view_model.dart';
 import 'package:quran_app/views/home%20widgets/rounded_menu_buttons.dart';
 
 import '../../controllers/animated_menu_icon_animation_controller.dart';
@@ -16,22 +17,24 @@ class HomeAppbarMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    BookmarkViewModel bookmarkViewModel = Get.put(BookmarkViewModel());
+
     var size = Get.size;
     var appBarHeight = AppBar().preferredSize.height;
     AnimatedMenuIconAnimationController animatedMenuIconAnimationController =
     Get.put(AnimatedMenuIconAnimationController());
     BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs());
 
-    return Obx(() => AnimatedPositioned(
-      top: !animatedMenuIconAnimationController.isPlaying.value
+    return Obx(() => AnimatedPadding(
+      padding: EdgeInsets.only(top: !animatedMenuIconAnimationController.isPlaying.value
           ? 0
           : 21,
-      right: !animatedMenuIconAnimationController.isPlaying.value
-          ? 0
-          : 21,
-      left: !animatedMenuIconAnimationController.isPlaying.value
-          ? 0
-          : 21,
+        right: !animatedMenuIconAnimationController.isPlaying.value
+            ? 0
+            : 21,
+        left: !animatedMenuIconAnimationController.isPlaying.value
+            ? 0
+            : 21,),
       duration: const Duration(milliseconds: 555),
       curve: Curves.linearToEaseOut,
       child: AnimatedContainer(
@@ -193,9 +196,9 @@ class HomeAppbarMenu extends StatelessWidget {
                             bottomsheetUIs.isDarkMode),
                         RoundedMenuButtons(
                           iconData: Icons.bookmark,
-                          widget: bottomsheetUIs.themeList(),
+                          widget: bottomsheetUIs.listOfBookMarkVersesWidget(bookmarkViewModel),
                           isDarkMode: bottomsheetUIs.isDarkMode,
-                          isComingSoon: true,
+                          isComingSoon: false,
                         ),
                         RoundedMenuButtons(
                           iconData: Icons.favorite_rounded,

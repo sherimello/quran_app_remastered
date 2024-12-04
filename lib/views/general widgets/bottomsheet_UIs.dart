@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quran_app/view%20models/bookmark_view_model.dart';
+import 'package:quran_app/views/screens/bookmark_verses.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomsheetUIs extends GetxController {
@@ -253,9 +254,13 @@ class BottomsheetUIs extends GetxController {
   }
 
   Widget addBookMarkWidget(
-      List<dynamic> folderNames, Rx<BookmarkViewModel> bookmarkViewModel,
-      arabicVerse, englishVerse, surah_id, verse_id
-      ) {
+      List<dynamic> folderNames,
+      Rx<BookmarkViewModel> bookmarkViewModel,
+      arabicVerse,
+      englishVerse,
+      surah_id,
+      verse_id,
+      int isSujoodVerse) {
     TextEditingController textEditingController = TextEditingController();
     RxBool shouldShowDeletionUI = false.obs;
     RxInt deletionIndex = 0.obs, bookMarkFolderIndex = 0.obs;
@@ -264,8 +269,9 @@ class BottomsheetUIs extends GetxController {
       child: Container(
         width: size.width,
         decoration: BoxDecoration(
-            color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
-            borderRadius: BorderRadius.circular(31),),
+          color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
+          borderRadius: BorderRadius.circular(31),
+        ),
         child: Column(
           children: [
             Obx(() => AnimatedPadding(
@@ -302,13 +308,17 @@ class BottomsheetUIs extends GetxController {
               padding: EdgeInsets.fromLTRB(21, 21, 21, 0),
               child: Row(
                 children: [
-                  Icon(Icons.book,
-                  color: isDarkMode.value ? Colors.white : Colors.black,),
+                  Icon(
+                    Icons.book,
+                    color: isDarkMode.value ? Colors.white : Colors.black,
+                  ),
                   Text(
                     "  bookmark folder:",
                     style: TextStyle(
-                        fontFamily: "SF-Pro", fontWeight: FontWeight.w900,
-                      color: isDarkMode.value ? Colors.white : Colors.black,),
+                      fontFamily: "SF-Pro",
+                      fontWeight: FontWeight.w900,
+                      color: isDarkMode.value ? Colors.white : Colors.black,
+                    ),
                   )
                 ],
               ),
@@ -318,7 +328,9 @@ class BottomsheetUIs extends GetxController {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(17),
-                    color: isDarkMode.value ? Colors.white.withOpacity(.31) : const Color(0x311d3f5e)),
+                    color: isDarkMode.value
+                        ? Colors.white.withOpacity(.31)
+                        : const Color(0x311d3f5e)),
                 child: TextField(
                   controller: textEditingController,
                   decoration: const InputDecoration(
@@ -344,7 +356,9 @@ class BottomsheetUIs extends GetxController {
                 width: size.width * .55,
                 height: size.width * .11,
                 decoration: BoxDecoration(
-                    color: isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                    color: isDarkMode.value
+                        ? Colors.white
+                        : const Color(0xff1d3f5e),
                     borderRadius: BorderRadius.circular(100)),
                 child: Center(
                   child: Text(
@@ -398,12 +412,16 @@ class BottomsheetUIs extends GetxController {
                                   deletionIndex.value = 0;
                                 } else {
                                   bookMarkFolderIndex.value = index;
-                                  bookmarkViewModel.value.addVerseAsBookmark(bookmarkViewModel
-                                      .value
-                                      .bookmarkModel
-                                      .value
-                                      .folderName[bookMarkFolderIndex.value]
-                                  ["folder_name"], arabicVerse, englishVerse, surah_id, verse_id);
+                                  bookmarkViewModel.value.addVerseAsBookmark(
+                                      bookmarkViewModel.value.bookmarkModel
+                                                  .value.folderName[
+                                              bookMarkFolderIndex.value]
+                                          ["folder_name"],
+                                      arabicVerse,
+                                      englishVerse,
+                                      surah_id,
+                                      verse_id,
+                                      isSujoodVerse);
                                   Navigator.pop(context);
                                 }
                               },
@@ -416,7 +434,9 @@ class BottomsheetUIs extends GetxController {
                                     color: deletionIndex.value == index &&
                                             shouldShowDeletionUI.value
                                         ? Colors.red
-                                        : isDarkMode.value ? Colors.white : const Color(0xff1d3f5e),
+                                        : isDarkMode.value
+                                            ? Colors.white
+                                            : const Color(0xff1d3f5e),
                                     borderRadius: BorderRadius.circular(17)),
                                 child: Center(
                                     child: Text(
@@ -432,7 +452,145 @@ class BottomsheetUIs extends GetxController {
                                       fontFamily: "SF-Pro",
                                       fontWeight: FontWeight.w900,
                                       fontSize: size.width * .041,
-                                      color: isDarkMode.value ? Colors.black : Colors.white),
+                                      color: isDarkMode.value
+                                          ? Colors.black
+                                          : Colors.white),
+                                )),
+                              ),
+                            )),
+                      );
+                    },
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget listOfBookMarkVersesWidget(BookmarkViewModel bookmarkViewModel) {
+    RxBool shouldShowDeletionUI = false.obs;
+    RxInt deletionIndex = 0.obs, bookMarkFolderIndex = 0.obs, length = 0.obs;
+
+    init() async {
+      await bookmarkViewModel.fetchBookmarkFolderNames();
+      length.value = bookmarkViewModel.bookmarkModel.value.folderName.length;
+    }
+
+    init();
+
+    return Padding(
+      padding: const EdgeInsets.all(21.0),
+      child: Container(
+        width: size.width,
+        decoration: BoxDecoration(
+          color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
+          borderRadius: BorderRadius.circular(31),
+        ),
+        child: Column(
+          children: [
+            Obx(() => AnimatedPadding(
+                  duration: const Duration(milliseconds: 555),
+                  curve: Curves.linearToEaseOut,
+                  padding: EdgeInsets.all(shouldShowDeletionUI.value ? 21 : 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      shouldShowDeletionUI.value = false;
+                      deletionIndex.value = 0;
+                    },
+                    child: AnimatedContainer(
+                      width: shouldShowDeletionUI.value ? size.width : 0,
+                      height: shouldShowDeletionUI.value ? size.width * .11 : 0,
+                      duration: const Duration(milliseconds: 555),
+                      curve: Curves.linearToEaseOut,
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(17)),
+                      child: Center(
+                        child: Text(
+                          "cancel",
+                          style: TextStyle(
+                              fontFamily: "SF-Pro",
+                              fontWeight: FontWeight.w900,
+                              fontSize: size.width * .041,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(21, 21, 21, 21),
+              child: Row(
+                children: [
+                  Icon(Icons.book),
+                  Text(
+                    "  all bookmark folders:",
+                    style: TextStyle(
+                        fontFamily: "SF-Pro", fontWeight: FontWeight.w900),
+                  )
+                ],
+              ),
+            ),
+            Obx(() => Expanded(
+                  child: ListView.builder(
+                    itemCount: length.value,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 21, vertical: 5.5),
+                        child: Obx(() => GestureDetector(
+                              onLongPress: () {
+                                deletionIndex.value = index;
+                                shouldShowDeletionUI.value = true;
+                                print("long pressed");
+                              },
+                              onTap: () async {
+                                if (shouldShowDeletionUI.value) {
+                                  await bookmarkViewModel.deleteData(
+                                      bookmarkViewModel.bookmarkModel.value
+                                              .folderName[deletionIndex.value]
+                                          ["folder_name"]);
+                                  shouldShowDeletionUI.value = false;
+                                  deletionIndex.value = 0;
+                                  init();
+                                } else {
+                                  Get.to(() => BookmarkVerses(
+                                        bookmarkFolderName: bookmarkViewModel
+                                            .bookmarkModel
+                                            .value
+                                            .folderName[index]["folder_name"],
+                                        isDarkMode: isDarkMode,
+                                      ));
+                                }
+                              },
+                              child: AnimatedContainer(
+                                width: size.width,
+                                height: size.width * .11,
+                                duration: const Duration(milliseconds: 555),
+                                curve: Curves.linearToEaseOut,
+                                decoration: BoxDecoration(
+                                    color: deletionIndex.value == index &&
+                                            shouldShowDeletionUI.value
+                                        ? Colors.red
+                                        : isDarkMode.value
+                                            ? Colors.white
+                                            : const Color(0xff1d3f5e),
+                                    borderRadius: BorderRadius.circular(17)),
+                                child: Center(
+                                    child: Text(
+                                  deletionIndex.value == index &&
+                                          shouldShowDeletionUI.value
+                                      ? "delete folder"
+                                      : bookmarkViewModel.bookmarkModel.value
+                                          .folderName[index]["folder_name"],
+                                  style: TextStyle(
+                                      fontFamily: "SF-Pro",
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: size.width * .041,
+                                      color: isDarkMode.value
+                                          ? Colors.black
+                                          : Colors.white),
                                 )),
                               ),
                             )),
