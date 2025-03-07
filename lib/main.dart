@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:quran_app/views/screens/favorite_verses.dart';
 import 'package:quran_app/views/screens/home.dart';
+import 'package:quran_app/views/screens/search_verses.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(const QuranApp());
-  FlutterStatusbarcolor.setStatusBarColor(const Color(0xff1d3f5e), animate: true);
+  // FlutterStatusbarcolor.setStatusBarColor(const Color(0xff1d3f5e), animate: true);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Color(0xff1d3f5e), // Change to your desired color
     statusBarBrightness: Brightness.light, // For iOS (light or dark)
@@ -25,7 +28,9 @@ class QuranApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       themeMode: ThemeMode.light,
-      home: const Home(),
+      // home: const SearchVerses(),
+      home: const Home()
+      // home: FavoriteVerses(isDarkMode: true.obs),
     );
   }
 }

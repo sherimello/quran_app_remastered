@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/controllers/fontSizeController.dart';
 import 'package:quran_app/view%20models/bookmark_view_model.dart';
 import 'package:quran_app/view%20models/verse_view_model.dart';
 import 'package:quran_app/views/general%20widgets/bottomsheet_UIs.dart';
 import 'package:quran_app/views/home%20widgets/home_appbar_menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SurahScreen extends StatelessWidget {
   final RxBool isDarkMode;
@@ -22,11 +24,15 @@ class SurahScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     VerseViewModel verseViewModel =
-        Get.put(VerseViewModel(surahNumber: surahNumber));
+    Get.put(VerseViewModel(surahNumber: surahNumber));
     BookmarkViewModel bookmarkViewModel = Get.put(BookmarkViewModel());
     var size = Get.size;
     var appBarHeight = AppBar().preferredSize.height;
+
+    FontSizeController fontSizeController = Get.put(FontSizeController());
+
     return Obx(() => Scaffold(
           body: SizedBox(
             width: size.width,
@@ -73,10 +79,15 @@ class SurahScreen extends StatelessWidget {
                                   ) : const SizedBox(),
                               GestureDetector(
                                   onTap: () {
-                                    Get.bottomSheet(bottomsheetUIs.addBookMarkWidget(bookmarkViewModel.bookmarkModel.value.folderName, bookmarkViewModel.obs,
-                                        verseViewModel.verseModel.value
-                                            .arabicVerseInfo[index]["text"], verseViewModel.verseModel.value
-                                            .englishVerseInfo[index]["text"], surahNumber, index + 1, sujoodVerses.contains(index + 1) ? 1 : 0),);
+                                    Get.bottomSheet(bottomsheetUIs.verseOptions(
+                                        bookmarkViewModel.bookmarkModel.value.folderName, bookmarkViewModel.obs, verseViewModel.verseModel.value
+                                        .arabicVerseInfo[index]["text"], verseViewModel.verseModel.value
+                                        .englishVerseInfo[index]["text"],
+                                    surahNumber, index + 1, sujoodVerses.contains(index + 1) ? 1 : 0));
+                                    // Get.bottomSheet(bottomsheetUIs.addBookMarkWidget(bookmarkViewModel.bookmarkModel.value.folderName, bookmarkViewModel.obs,
+                                    //     verseViewModel.verseModel.value
+                                    //         .arabicVerseInfo[index]["text"], verseViewModel.verseModel.value
+                                    //         .englishVerseInfo[index]["text"], surahNumber, index + 1, sujoodVerses.contains(index + 1) ? 1 : 0),);
                                   },
                                 child: Container(
                                   decoration: const BoxDecoration(
@@ -123,10 +134,18 @@ class SurahScreen extends StatelessWidget {
                                                   .arabicVerseInfo[index]["text"],
                                               textAlign: TextAlign.end,
                                               style: TextStyle(
-                                                  fontSize: size.width * 0.061,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily:
-                                                  "Al Majeed Quranic Font_shiped"),
+                                                  fontSize: fontSizeController.arabicFontSize.value,
+                                                  // fontSize: size.width * 0.061,
+                                                  // fontWeight: FontWeight.w400,
+                                                  letterSpacing: 0,
+                                                  // fontFamily: "bismillah"
+                                                  // fontFamily: "hafs"
+                                                  fontFamily: "qalammajeed3"
+                                                  // fontFamily: "Al Majeed Quranic Font_shiped"
+                                                  // fontFamily:
+                                                  // "KFGQPC HafsEx1 Uthmanic Script"
+                                              ),
+                                                  // "Al Majeed Quranic Font_shiped"),
                                             ),
                                             sujoodVerses.contains(index + 1) ? SizedBox(
                                               height: size.width * .025,
@@ -146,8 +165,9 @@ class SurahScreen extends StatelessWidget {
                                             Obx(() => Text(
                                               verseViewModel.verseModel.value
                                                   .englishVerseInfo[index]["text"],
-                                              textAlign: TextAlign.end,
+                                              textAlign: TextAlign.start,
                                               style: TextStyle(
+                                                fontSize: fontSizeController.englishFontSize.value,
                                                   fontFamily: "SF-Pro",
                                                   color: isDarkMode.value
                                                       ? Colors.white

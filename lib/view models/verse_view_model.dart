@@ -32,6 +32,35 @@ class VerseViewModel extends GetxController {
     print(verseModel.value.englishVerseInfo[0]["text"]);
   }
 
+  Future<void> fetchVersesByKeyword({required String keyword}) async {
+    final Database db = await DatabaseController().database;
+
+    // Use LIKE query to search for the keyword in all verses
+    var arabicVerses = await db.rawQuery(
+        "SELECT * FROM verses WHERE text LIKE '%$keyword%' AND lang_id = 1");
+
+    var englishVerses = await db.rawQuery(
+        "SELECT * FROM verses WHERE text LIKE '%$keyword%' AND lang_id = 2");
+
+    // Update the VerseModel with the fetched data
+    verseModel.value = VerseModel(
+      arabicVerseInfo: arabicVerses.obs,
+      englishVerseInfo: englishVerses.obs,
+    );
+
+    // Print the verses for debugging
+    print("Arabic Verses:");
+    for (var verse in arabicVerses) {
+      print(verse["text"]);
+    }
+
+    print("English Verses:");
+    for (var verse in englishVerses) {
+      print(verse["text"]);
+    }
+  }
+
+
   @override
   Future<void> onInit() async {
     // TODO: implement onInit

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/views/screens/favorite_verses.dart';
+import 'package:quran_app/views/screens/search_verses.dart';
 
 class RoundedMenuButtons extends StatelessWidget {
   final IconData iconData;
@@ -17,7 +19,12 @@ class RoundedMenuButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => GestureDetector(
-          onTap: () => isComingSoon
+          onTap: () =>
+          iconData == Icons.manage_search ?
+              Get.to(() => SearchVerses(isDarkMode: isDarkMode,)) :
+          iconData == Icons.favorite_rounded ?
+              Navigator.push(context, MaterialPageRoute(builder: (builder) => FavoriteVerses(isDarkMode: isDarkMode,))) :
+          isComingSoon
               ? Get.snackbar(
                   "sorry!",
                   "feature will be active soon...",

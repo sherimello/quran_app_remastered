@@ -11,7 +11,7 @@ class DatabaseController extends GetxController {
   Future<Database> get database async {
     // if (_database != null) return _database.value!;
 
-    _database = await initDatabase("en_ar_quran.db");
+    _database = await initDatabase("the_book.db");
     return _database!;
   }
 

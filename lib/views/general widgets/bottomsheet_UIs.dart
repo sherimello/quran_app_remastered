@@ -1,12 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app/controllers/fontSizeController.dart';
+import 'dart:math';
 import 'package:quran_app/view%20models/bookmark_view_model.dart';
+import 'package:quran_app/view%20models/favorite_verses_view_model.dart';
 import 'package:quran_app/views/screens/bookmark_verses.dart';
+import 'package:quran_app/views/screens/surah_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomsheetUIs extends GetxController {
   var size = Get.size;
   RxBool isDarkMode = false.obs;
+  RxDouble arabicFontSize = 21.0.obs;
+  RxDouble englishFontSize = 15.0.obs;
+
+  FontSizeController fontSizeController = Get.put(FontSizeController());
 
   @override
   Future<void> onInit() async {
@@ -25,6 +34,18 @@ class BottomsheetUIs extends GetxController {
     } else {
       Get.changeTheme(ThemeData.light());
       Get.changeThemeMode(ThemeMode.light);
+    }
+
+    if (sharedPreferences.containsKey("arabicFontSize")) {
+      arabicFontSize.value = sharedPreferences.getDouble("arabicFontSize")!;
+    } else {
+      arabicFontSize.value = (size.width * 0.061);
+    }
+
+    if (sharedPreferences.containsKey("englishFontSize")) {
+      englishFontSize.value = sharedPreferences.getDouble("englishFontSize")!;
+    } else {
+      englishFontSize.value = 15.0;
     }
   }
 
@@ -602,5 +623,294 @@ class BottomsheetUIs extends GetxController {
         ),
       ),
     );
+  }
+
+  Widget verseOptions(
+      List<dynamic> folderNames,
+      Rx<BookmarkViewModel> bookmarkViewModel,
+      String arabicVerse,
+      String englishVerse,
+      int surah_id,
+      int verse_id,
+      int isSujoodVerse) {
+    BookmarkViewModel bookmarkViewModel = Get.put(BookmarkViewModel());
+    FavoriteVersesViewModel favoriteVersesViewModel =
+        Get.put(FavoriteVersesViewModel());
+
+    return Padding(
+        padding: const EdgeInsets.all(21.0),
+        child: Container(
+            width: size.width,
+            decoration: BoxDecoration(
+              color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
+              borderRadius: BorderRadius.circular(31),
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Obx(
+                () => Padding(
+                    padding: const EdgeInsets.fromLTRB(21, 21, 21, 11),
+                    child: GestureDetector(
+                      onTap: () async {
+                        Get.bottomSheet(addBookMarkWidget(
+                            folderNames,
+                            bookmarkViewModel.obs,
+                            arabicVerse,
+                            englishVerse,
+                            surah_id,
+                            verse_id,
+                            isSujoodVerse));
+                      },
+                      child: AnimatedContainer(
+                        width: size.width,
+                        height: size.width * .11,
+                        duration: const Duration(milliseconds: 555),
+                        curve: Curves.linearToEaseOut,
+                        decoration: BoxDecoration(
+                            color: isDarkMode.value
+                                ? Colors.white
+                                : const Color(0xff1d3f5e),
+                            borderRadius: BorderRadius.circular(17)),
+                        child: Center(
+                            child: Text(
+                          "add to bookmarks",
+                          style: TextStyle(
+                              fontFamily: "SF-Pro",
+                              fontWeight: FontWeight.w900,
+                              fontSize: size.width * .041,
+                              color: isDarkMode.value
+                                  ? Colors.black
+                                  : Colors.white),
+                        )),
+                      ),
+                    )),
+              ),
+              Obx(
+                () => Padding(
+                    padding: const EdgeInsets.fromLTRB(21, 0, 21, 21),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await favoriteVersesViewModel.addVerseAsFavorite(
+                            arabicVerse: arabicVerse,
+                            englishVerse: englishVerse,
+                            surah_id: surah_id,
+                            verse_id: verse_id,
+                            isSujoodVerse: isSujoodVerse);
+                        Get.back();
+                      },
+                      child: AnimatedContainer(
+                        width: size.width,
+                        height: size.width * .11,
+                        duration: const Duration(milliseconds: 555),
+                        curve: Curves.linearToEaseOut,
+                        decoration: BoxDecoration(
+                            color: isDarkMode.value
+                                ? Colors.white
+                                : const Color(0xff1d3f5e),
+                            borderRadius: BorderRadius.circular(17)),
+                        child: Center(
+                            child: Text(
+                          "add to favorite verses",
+                          style: TextStyle(
+                              fontFamily: "SF-Pro",
+                              fontWeight: FontWeight.w900,
+                              fontSize: size.width * .041,
+                              color: isDarkMode.value
+                                  ? Colors.black
+                                  : Colors.white),
+                        )),
+                      ),
+                    )),
+              )
+            ])));
+  }
+
+  Widget settingsUI() {
+    return Obx(() => Container(
+          width: size.width,
+          // height: size.width * 1.5,
+          margin: const EdgeInsets.all(21),
+          decoration: BoxDecoration(
+              color: isDarkMode.value ? const Color(0xff1d3f5e) : Colors.white,
+              borderRadius: BorderRadius.circular(31)),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 355),
+                  width: size.width,
+                  padding: const EdgeInsets.all(17),
+                  margin: const EdgeInsets.all(17),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(41),
+                      color: Colors.black38),
+                  child: Column(
+                    children: [
+                      Text(
+                        "arabic font size: ${fontSizeController.arabicFontSize.round()}",
+                        style: const TextStyle(
+                          height: 0,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 21,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              fontSizeController.arabicFontSize.value -= 1;
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.setDouble(
+                                  "arabicFontSize", fontSizeController.arabicFontSize.value);
+                            },
+                            child: Container(
+                              width: size.width * .1,
+                              height: size.width * .1,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(1000)),
+                              child: const Icon(
+                                CupertinoIcons.minus,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              width: size.width * .41,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(11.0),
+                                  child: Text(
+                                    "بِسْمِ اللهِ",
+                                    style: TextStyle(
+                                        height: 0,
+                                        color: isDarkMode.value
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontFamily:
+                                            "Al Majeed Quranic Font_shiped",
+                                        fontSize: fontSizeController.arabicFontSize.value),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )),
+                          GestureDetector(
+                            onTap: () async {
+                              fontSizeController.arabicFontSize.value += 1;
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.setDouble(
+                                  "arabicFontSize", fontSizeController.arabicFontSize.value);
+                            },
+                            child: Container(
+                              width: size.width * .1,
+                              height: size.width * .1,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(1000)),
+                              child: const Icon(
+                                CupertinoIcons.plus,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 355),
+                  width: size.width,
+                  padding: const EdgeInsets.all(17),
+                  margin: const EdgeInsets.fromLTRB(17, 0, 17, 17),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(41),
+                      color: Colors.black38),
+                  child: Column(
+                    children: [
+                      Text(
+                        "english font size: ${fontSizeController.englishFontSize.round()}",
+                        style: TextStyle(
+                          height: 0,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 21,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              fontSizeController.englishFontSize.value -= 1;
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.setDouble(
+                                  "englishFontSize", fontSizeController.englishFontSize.value);
+                            },
+                            child: Container(
+                              width: size.width * .1,
+                              height: size.width * .1,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(1000)),
+                              child: const Icon(
+                                CupertinoIcons.minus,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                              width: size.width * .41,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(11.0),
+                                  child: Text(
+                                    "In the name of ALLAH",
+                                    style: TextStyle(
+                                        height: 0,
+                                        color: isDarkMode.value
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: fontSizeController.englishFontSize.value),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )),
+                          GestureDetector(
+                            onTap: () async {
+                              fontSizeController.englishFontSize.value += 1;
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.setDouble(
+                                  "englishFontSize", fontSizeController.englishFontSize.value);
+                            },
+                            child: Container(
+                              width: size.width * .1,
+                              height: size.width * .1,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(1000)),
+                              child: const Icon(
+                                CupertinoIcons.plus,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
