@@ -8,15 +8,15 @@ import 'package:quran_app/views/screens/home.dart';
 import 'package:quran_app/views/screens/search_verses.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  runApp(const QuranApp());
+  WidgetsFlutterBinding.ensureInitialized();
   // FlutterStatusbarcolor.setStatusBarColor(const Color(0xff1d3f5e), animate: true);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Color(0xff1d3f5e), // Change to your desired color
     statusBarBrightness: Brightness.light, // For iOS (light or dark)
     statusBarIconBrightness:
-        Brightness.light, // For Android (light or dark icons)
+    Brightness.light, // For Android (light or dark icons)
   ));
+  Future.delayed(const Duration(milliseconds: 200), () => runApp(const QuranApp()));
 }
 
 class QuranApp extends StatelessWidget {
@@ -25,6 +25,14 @@ class QuranApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          return MediaQuery(
+            data: mediaQuery.copyWith(textScaler: const TextScaler.linear(1.0),
+              devicePixelRatio: 1.0, ),
+            child: child!,
+          );
+        },
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       themeMode: ThemeMode.light,

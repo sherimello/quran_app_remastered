@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
   final AnimatedMenuIconAnimationController
       animatedMenuIconAnimationController =
       Get.put(AnimatedMenuIconAnimationController());
-  final BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs());
+  BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs(Get.size));
   final SettingsController settingsController = Get.put(SettingsController());
 
   RxBool searchClicked = false.obs;

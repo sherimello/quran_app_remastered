@@ -18,6 +18,7 @@ class RoundedMenuButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Obx(() => GestureDetector(
           onTap: () =>
           iconData == Icons.manage_search ?
@@ -37,13 +38,12 @@ class RoundedMenuButtons extends StatelessWidget {
                   widget,
                 ),
           child: Container(
+            width: ((size.width - 63 - size.width * .075 - 47) / 7),
+            height: ((size.width - 63 - size.width * .075 - 47) / 7),
             decoration: BoxDecoration(
                 color: isDarkMode.value ? Colors.black : Colors.white,
                 borderRadius: BorderRadius.circular(100)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(iconData),
-            ),
+            child: Center(child: Icon(iconData, size: 19,)),
           ),
         ));
   }

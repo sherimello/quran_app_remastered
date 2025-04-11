@@ -21,6 +21,8 @@ class HomeAppbarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs(MediaQuery.of(context).size));
+
     BookmarkViewModel bookmarkViewModel = Get.put(BookmarkViewModel());
 
     RxBool searchClicked = false.obs;
@@ -28,7 +30,6 @@ class HomeAppbarMenu extends StatelessWidget {
     var appBarHeight = AppBar().preferredSize.height;
     AnimatedMenuIconAnimationController animatedMenuIconAnimationController =
         Get.put(AnimatedMenuIconAnimationController());
-    BottomsheetUIs bottomsheetUIs = Get.put(BottomsheetUIs());
 
     return Obx(() => AnimatedPadding(
           padding: EdgeInsets.only(
@@ -45,7 +46,7 @@ class HomeAppbarMenu extends StatelessWidget {
             width: size.width,
             height: !animatedMenuIconAnimationController.isPlaying.value
                 ? appBarHeight
-                : appBarHeight * 1.5,
+                : appBarHeight * 1.35,
             // height: !animatedMenuIconAnimationController.isPlaying.value ? appBarHeight : size.width,
             decoration: BoxDecoration(
                 color: const Color(0xff1d3f5e),
@@ -147,7 +148,7 @@ class HomeAppbarMenu extends StatelessWidget {
                 Positioned(
                     top: !animatedMenuIconAnimationController.isPlaying.value
                         ? appBarHeight * .5 - size.width * .075 * .45
-                        : appBarHeight * .75 - size.width * .075 * .45,
+                        : appBarHeight * .675 - size.width * .075 * .45,
                     right: 21,
                     child: GestureDetector(
                         onTap: () => animatedMenuIconAnimationController
@@ -175,7 +176,7 @@ class HomeAppbarMenu extends StatelessWidget {
                         absorbing: !animatedMenuIconAnimationController
                             .isPlaying.value,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             RoundedMenuButtons(
                                 iconData: bottomsheetUIs.isDarkMode.value
@@ -183,6 +184,7 @@ class HomeAppbarMenu extends StatelessWidget {
                                     : Icons.light_mode,
                                 widget: bottomsheetUIs.themeList(),
                                 isDarkMode: bottomsheetUIs.isDarkMode),
+                            SizedBox(width: size.width * .017,),
                             RoundedMenuButtons(
                               iconData: Icons.bookmark,
                               widget: bottomsheetUIs.listOfBookMarkVersesWidget(
@@ -190,24 +192,28 @@ class HomeAppbarMenu extends StatelessWidget {
                               isDarkMode: bottomsheetUIs.isDarkMode,
                               isComingSoon: false,
                             ),
+                            SizedBox(width: size.width * .017,),
                             RoundedMenuButtons(
                               iconData: Icons.favorite_rounded,
                               widget: bottomsheetUIs.themeList(),
                               isDarkMode: bottomsheetUIs.isDarkMode,
                               isComingSoon: false,
                             ),
+                            SizedBox(width: size.width * .017,),
                             RoundedMenuButtons(
                               iconData: Icons.manage_search,
                               widget: const SizedBox(),
                               isDarkMode: bottomsheetUIs.isDarkMode,
                               isComingSoon: false,
                             ),
+                            SizedBox(width: size.width * .017,),
                             RoundedMenuButtons(
                               iconData: Icons.settings,
                               widget: bottomsheetUIs.settingsUI(),
                               isDarkMode: bottomsheetUIs.isDarkMode,
                               isComingSoon: false,
                             ),
+                            SizedBox(width: size.width * .017,),
                             RoundedMenuButtons(
                               iconData: Icons.info,
                               widget: bottomsheetUIs.aboutWidget(),

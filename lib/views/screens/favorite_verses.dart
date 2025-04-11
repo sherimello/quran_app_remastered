@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:quran_app/models/favorite_verse_model.dart';
 import 'package:quran_app/view%20models/favorite_verses_view_model.dart';
 
+import '../../controllers/fontSizeController.dart';
 import '../../view models/bookmark_view_model.dart';
 import '../../view models/sujood_verse_view_model.dart';
 import '../../view models/verse_view_model.dart';
@@ -18,14 +19,14 @@ class FavoriteVerses extends StatelessWidget {
     var appBarHeight = AppBar().preferredSize.height;
     var size = Get.size;
     RxList bookmarks = [].obs;
-    ;
+
+    SujoodVerseViewModel sujoodVerseViewModel = Get.put(SujoodVerseViewModel());
+    FontSizeController fontSizeController = Get.put(FontSizeController());
     Rx<FavoriteVersesViewModel> favoriteVerseViewModel =
         Get.put(FavoriteVersesViewModel()).obs;
 
-    SujoodVerseViewModel sujoodVerseViewModel = Get.put(SujoodVerseViewModel());
-
-      Rx<FavoriteVerseModel> favorites = favoriteVerseViewModel.value.favoriteVerseModel;
-
+    Rx<FavoriteVerseModel> favorites =
+        favoriteVerseViewModel.value.favoriteVerseModel;
 
     return Obx(() => Scaffold(
           appBar: AppBar(
@@ -108,11 +109,11 @@ class FavoriteVerses extends StatelessWidget {
                                                     ['arabic'],
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
-                                                    fontSize:
-                                                        size.width * 0.061,
+                                                    fontSize: fontSizeController
+                                                        .arabicFontSize.value,
                                                     fontWeight: FontWeight.w500,
-                                                    fontFamily:
-                                                        "Al Majeed Quranic Font_shiped"),
+                                                    letterSpacing: 0,
+                                                    fontFamily: "qalammajeed3"),
                                               ),
                                               favorites.value.isSujoodVerse[
                                                           index] ==
@@ -139,9 +140,7 @@ class FavoriteVerses extends StatelessWidget {
                                                 height: size.width * .025,
                                               ),
                                               Obx(() => Text(
-                                                    favorites.value
-                                                            .english[index]
-                                                        ['english'],
+                                                    "${favorites.value.english[index]['english']} [${favorites.value.surah_id[index]["surah_id"]}:${favorites.value.verse_id[index]["verse_id"]}]",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                         fontFamily: "SF-Pro",
@@ -153,12 +152,26 @@ class FavoriteVerses extends StatelessWidget {
                                                                     0xff1d3f5e)
                                                                 .withOpacity(
                                                                     .55),
+                                                        fontSize:
+                                                            fontSizeController
+                                                                .englishFontSize
+                                                                .value,
                                                         fontWeight:
                                                             FontWeight.w900,
                                                         fontStyle:
                                                             FontStyle.italic),
-                                                  ))
+                                                  )),
                                               // SizedBox(height: size.width * .055,),
+                                              sujoodVerseViewModel.sujoodVerseModel.value.surahID.contains(favorites.value.surah_id[index]["surah_id"])
+                                                  && sujoodVerseViewModel.sujoodVerseModel.value.verseID.contains(favorites.value.verse_id[index]["verse_id"]) ? const Text(
+                                                "verse of prostration (sujood)",
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontFamily: "SF-Pro",
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ) : const SizedBox(),
                                             ],
                                           ),
                                         ),

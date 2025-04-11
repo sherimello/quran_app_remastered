@@ -1,0 +1,64 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <!-- Colors -->
+    <color id="darkBlue">#1d3f5e</color>
+    <color id="whiteColor">#FFFFFF</color>
+  </defs>
+
+  <!-- 1. Background Circle -->
+  <circle cx="50" cy="50" r="50" fill="#1d3f5e"/>
+
+  <!-- Group for White Elements -->
+  <g fill="#FFFFFF" stroke="none">
+
+      <!-- ORDER MATTERS FOR OVERLAP - Draw "behind" elements first if needed -->
+
+      <!-- 2. Dome -->
+      <!-- The dome path remains the primary shape -->
+      <path d="M 30 75 C 32 50, 68 50, 70 75 Z" />
+      <!-- Peak Y is around 50 based on control points -->
+
+      <!-- 3. Dome Finial (Spire) - Ensure connection -->
+      <!-- Make base circle slightly larger and position its center *on* the dome's top curve (approx y=50) -->
+      <circle cx="50" cy="55" r="2" /> <!-- Base sits on the peak -->
+      <!-- Start shaft *from inside* the base circle's bottom edge (y=50+2=52 conceptually)
+           but visually draw it upwards from the peak. Overlap slightly. Start y lower than base circle cy -->
+      <rect x="49" y="37" width="2" height="17" rx="1" /> <!-- Increased height to start lower (y=34), overlaps circle base -->
+      <!-- Position crescent relative to shaft top (y=34) -->
+<path d="M 46.75 35.5 A 5.2 5.2 0 0 0 53.25 35.5 A 3.25 3.25 0 0 1 46.75 35.5 Z" />
+
+      <!-- 4. Minaret -->
+      <!-- Shaft - Drawn first -->
+      <!-- Ends at y = 45 + 38 = 83 -->
+      <rect x="73" y="42" width="7" height="38" rx="1" />
+
+      <!-- Balcony Hint - Overlaps the shaft visually -->
+      <!-- Spans Y=56 to Y=60. Correctly within the shaft's Y=45 to Y=83 range. -->
+       <rect x="72" y="56" width="9" height="4" rx="1"/>
+
+      <!-- Top Section Base -->
+      <!-- Starts Y=42, Height=3. Ends Y=45. Touches the top of the shaft precisely. -->
+       <!-- Optional: Increase height slightly (e.g., 3.5) for explicit overlap -->
+      <rect x="71.5" y="41" width="10" height="3.5" rx="1"/> <!-- Slight overlap added -->
+
+      <!-- Characteristic Tapered Top Shape -->
+      <!-- Starts/Ends Y=42, meeting the (now slightly overlapped) Top Section Base -->
+       <!-- Peak Y = 35 -->
+      <polygon points="71.5, 42.1  81.5, 42.1  78.5, 35  74.5, 35"/> <!-- Start slightly lower (42.1) for robust overlap -->
+
+       <!-- Minaret Finial (Spire) -->
+       <!-- Shaft starts Y=28, height 8, ends Y=36. Overlaps the polygon peak (Y=35) -->
+        <rect x="75.5" y="28" width="2" height="8" rx="0.5" />
+        <!-- Circle base positioned at the top of the shaft (y=28) -->
+       <circle cx="76.5" cy="27.5" r="1.5" />
+
+
+       <!-- 5. Base Line (Re-enabled and adjusted for connection) -->
+       <!-- Position Y to touch the bottom of the Dome (Y=75) -->
+       <!-- Extend height slightly for definite overlap -->
+       <rect x="25" y="74.5" width="50" height="5.5" rx="1"/>
+
+  </g>
+
+</svg>
